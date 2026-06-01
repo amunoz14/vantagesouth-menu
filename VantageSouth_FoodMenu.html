@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vantage South — Food Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #1a1410;
+  --ember:  #b85c2a;
+  --gold:   #c4973a;
+  --cream:  #faf6ef;
+  --smoke:  #e8e0d4;
+  --mid:    #7a6e62;
+  --dark:   #2c1f14;
+  --pale:   #f5efe6;
+  --river:  #2c4050;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;min-height:100vh}
+
+/* ── Cover ── */
+.cover{
+  min-height:100vh;background:var(--dark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding:3rem 2rem;
+}
+.cover::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 100% 60% at 50% -5%,rgba(184,92,42,.32) 0%,transparent 65%),
+             radial-gradient(ellipse 60% 60% at 100% 100%,rgba(44,32,20,.7) 0%,transparent 55%);
+}
+.cover-border{
+  position:absolute;inset:1.2rem;
+  border:1px solid rgba(196,151,58,.2);pointer-events:none;
+}
+.cover-border::before{
+  content:'';position:absolute;inset:.8rem;
+  border:1px solid rgba(196,151,58,.1);
+}
+.cover-inner{position:relative;z-index:1;text-align:center}
+.cover-eye{font-size:.6rem;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--ember);margin-bottom:1.6rem}
+.cover-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1.2rem}
+.cover-divider span{display:block;height:1px;width:48px;background:rgba(196,151,58,.35)}
+.cover-divider i{width:7px;height:7px;border:1px solid var(--gold);transform:rotate(45deg);opacity:.65;flex-shrink:0}
+.cover-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,9vw,5.5rem);font-weight:400;color:#f2ede6;letter-spacing:.06em;line-height:1;margin-bottom:.4rem}
+.cover-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(.9rem,2.2vw,1.15rem);font-style:italic;color:rgba(242,237,230,.45);letter-spacing:.08em;margin-bottom:2.2rem}
+.cover-meta{font-size:.58rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:rgba(242,237,230,.28);line-height:2.6}
+.cover-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;opacity:.3;transition:opacity .3s}
+.cover-scroll:hover{opacity:.7}
+.cover-scroll span{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#f2ede6}
+.scroll-line{width:1px;height:34px;background:linear-gradient(to bottom,var(--ember),transparent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scaleY(1);opacity:.3}50%{transform:scaleY(1.3);opacity:1}}
+
+/* ── Nav ── */
+.nav-outer{position:sticky;top:0;z-index:100;background:var(--dark);border-bottom:1px solid rgba(184,92,42,.2)}
+.nav{display:flex;overflow-x:auto;scrollbar-width:none;max-width:1000px;margin:0 auto;padding:0 1rem}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{flex-shrink:0;padding:.9rem 1.2rem;background:none;border:none;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;font-size:.56rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(242,237,230,.32);cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-btn:hover{color:rgba(242,237,230,.65)}
+.nav-btn.active{color:var(--ember);border-bottom-color:var(--ember)}
+
+/* ── Pages ── */
+.page{display:none}.page.on{display:block}
+.wrap{max-width:820px;margin:0 auto;padding:3rem 1.5rem 6rem}
+
+/* ── Section head ── */
+.sh{text-align:center;margin-bottom:2.8rem;position:relative;padding-bottom:1.6rem}
+.sh::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:36px;height:2px;background:var(--ember)}
+.sh-eye{font-size:.52rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:.8rem}
+.sh-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:400;color:var(--ink);letter-spacing:.04em;line-height:1.1}
+.sh-sub{margin-top:.6rem;font-family:'Cormorant Garamond',serif;font-size:.8rem;font-style:italic;color:var(--mid);letter-spacing:.04em}
+
+/* ── Sub-label ── */
+.sl{display:flex;align-items:center;gap:.8rem;margin:2.4rem 0 1rem}
+.sl-text{font-size:.5rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--ember);white-space:nowrap}
+.sl-line{flex:1;height:1px;background:var(--smoke)}
+
+/* ── Item ── */
+.item{display:grid;grid-template-columns:1fr auto;gap:.25rem 1rem;padding:.85rem 0;border-bottom:1px solid var(--smoke);transition:background .15s}
+.item:last-child{border-bottom:none}
+.item:hover{background:rgba(184,92,42,.04);margin:0 -.75rem;padding:.85rem .75rem}
+.item-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);grid-column:1;grid-row:1;letter-spacing:.01em}
+.item-desc{font-size:.65rem;color:var(--mid);line-height:1.65;letter-spacing:.02em;grid-column:1;grid-row:2;font-style:italic}
+.item-price{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--ember);grid-column:2;grid-row:1/3;align-self:center;white-space:nowrap}
+
+/* ── Tags ── */
+.tag{display:inline-block;font-size:.4rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 5px;border-radius:2px;margin-left:5px;vertical-align:middle}
+.v{background:#e6f0dc;color:#2d5a0e}
+.gf{background:#f0ead6;color:#6b5200}
+.sig{background:var(--dark);color:var(--gold);border:1px solid rgba(196,151,58,.3)}
+.new-tag{background:#fce8dc;color:#8f3612}
+
+/* ── Callout ── */
+.note{background:rgba(184,92,42,.06);border:1px solid rgba(184,92,42,.15);border-left:3px solid var(--ember);padding:.65rem .9rem;margin:1.2rem 0;font-size:.62rem;font-style:italic;color:var(--mid);letter-spacing:.02em;line-height:1.7}
+
+/* ── Two-col sides ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 2.5rem}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+
+/* ── Addon line ── */
+.addon{font-size:.58rem;color:var(--mid);font-style:italic;padding:.2rem 0 .5rem;letter-spacing:.02em}
+
+/* ── Footer ── */
+.menu-footer{text-align:center;padding:2.5rem 1.5rem 3.5rem;border-top:1px solid var(--smoke);max-width:820px;margin:0 auto}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--ink);letter-spacing:.1em;margin-bottom:.6rem}
+.footer-note{font-size:.55rem;color:var(--mid);letter-spacing:.05em;line-height:2.2;font-style:italic}
+
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.page.on .wrap{animation:fadein .35s ease both}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-border"></div>
+  <div class="cover-inner">
+    <p class="cover-eye">Nexus at The 78 · Chicago, Illinois</p>
+    <div class="cover-divider"><span></span><i></i><span></span></div>
+    <h1 class="cover-title">Vantage South</h1>
+    <p class="cover-sub">All-Day Dining · Riverfront Restaurant & Terrace</p>
+    <div class="cover-meta">Breakfast 6:30 AM – 11:00 AM · Lunch 11:30 AM – 3:00 PM<br>Dinner 5:00 PM – 11:00 PM · Seven Days a Week</div>
+  </div>
+  <div class="cover-scroll" onclick="document.querySelector('.nav-outer').scrollIntoView({behavior:'smooth'})">
+    <span>Menu</span><div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="nav-outer">
+  <nav class="nav">
+    <button class="nav-btn active" onclick="go('bfst',this)">Breakfast</button>
+    <button class="nav-btn" onclick="go('lunch',this)">Lunch</button>
+    <button class="nav-btn" onclick="go('dinner',this)">Dinner</button>
+    <button class="nav-btn" onclick="go('sides',this)">Sides</button>
+    <button class="nav-btn" onclick="go('desserts',this)">Desserts</button>
+  </nav>
+</div>
+
+<!-- ═══════ BREAKFAST ═══════ -->
+<div class="page on" id="p-bfst"><div class="wrap">
+  <div class="sh"><p class="sh-eye">Vantage South</p><h2 class="sh-title">Breakfast</h2><p class="sh-sub">Served daily 6:30 AM – 11:00 AM · Weekend brunch cocktails from 9:00 AM</p></div>
+  <div class="note">Full espresso bar in partnership with a locally rooted Chicago roaster. Fresh-pressed juices, seasonal smoothies, and loose-leaf teas available all morning. Weekend brunch cocktails — classic mimosas, Aperol spritzes, and the Vantage South Bloody Mary — from 9:00 AM Saturday & Sunday.</div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Morning Mains</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">The Nexus Breakfast Plate</span><span class="item-price">$22</span><span class="item-desc">Two farm-fresh eggs your way, ember-roasted breakfast potatoes, choice of applewood-smoked bacon or chicken sausage, grilled sourdough toast with whipped cultured butter.</span></div>
+  <div class="item"><span class="item-name">Open-Flamed Vegetable Frittata <span class="tag v">V</span></span><span class="item-price">$21</span><span class="item-desc">Wood-fired baked egg frittata with roasted seasonal vegetables, whipped goat cheese, fresh herbs, and Calabrian chili hot sauce. Served with mixed greens and grilled sourdough.</span></div>
+  <div class="item"><span class="item-name">Malt Pancake Stack <span class="tag v">V</span></span><span class="item-price">$20</span><span class="item-desc">Three fluffy malted buttermilk pancakes with whipped maple butter, warm seasonal berry compote, and powdered sugar. Served with pure Vermont maple syrup.</span></div>
+  <div class="item"><span class="item-name">Crêpes Suzette <span class="tag v">V</span></span><span class="item-price">$22</span><span class="item-desc">Classic French-style crêpes in a warm orange-Grand Marnier butter sauce with caramelized sugar and fresh orange zest. Finished with powdered sugar and blood orange.</span></div>
+  <div class="item"><span class="item-name">Avocado Toast & Ember-Poached Eggs <span class="tag v">V</span></span><span class="item-price">$21</span><span class="item-desc">Thick-cut sourdough with smashed avocado, two soft poached eggs, everything bagel seasoning, pickled fresno chili, microgreens, and chili oil. Finished with shaved radish and lemon.</span></div>
+  <div class="item"><span class="item-name">Steak & Eggs</span><span class="item-price">$34</span><span class="item-desc">Six-ounce ember-grilled flat iron steak with two farm-fresh eggs your way, ember-roasted breakfast potatoes, charred scallion butter, and grilled sourdough toast.</span></div>
+  <div class="item"><span class="item-name">Riverfront Smoked Salmon Plate</span><span class="item-price">$26</span><span class="item-desc">House cold-smoked salmon with toasted everything bagel, whipped cream cheese, shaved red onion, capers, cucumber, tomato, and fresh dill. Served with soft-boiled egg and dressed arugula.</span></div>
+  <div class="item"><span class="item-name">Ember Shakshuka <span class="tag v">V</span></span><span class="item-price">$22</span><span class="item-desc">Two eggs baked in fire-roasted tomato and harissa pepper sauce with crumbled feta, fresh herbs, and olive oil. Served with warm grilled pita and labneh.</span></div>
+  <div class="item"><span class="item-name">Brioche French Toast <span class="tag v">V</span></span><span class="item-price">$21</span><span class="item-desc">Thick-cut brioche in malted custard, griddle-pressed golden, topped with mascarpone cream, caramelized peaches, candied pecans, and warm bourbon maple glaze.</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">À la Carte</span><div class="sl-line"></div></div>
+  <div class="two-col">
+    <div class="item"><span class="item-name">Applewood Bacon (3 slices)</span><span class="item-price">$7</span><span class="item-desc">Thick-cut, applewood-smoked</span></div>
+    <div class="item"><span class="item-name">House Chicken Sausage (2 links)</span><span class="item-price">$7</span><span class="item-desc">Fennel & herb seasoned</span></div>
+    <div class="item"><span class="item-name">Ember-Roasted Breakfast Potatoes</span><span class="item-price">$7</span><span class="item-desc">Rosemary, garlic confit, sea salt</span></div>
+    <div class="item"><span class="item-name">Two Farm Eggs Any Style</span><span class="item-price">$7</span><span class="item-desc">Your choice of preparation</span></div>
+    <div class="item"><span class="item-name">Grilled Sourdough Toast</span><span class="item-price">$5</span><span class="item-desc">Whipped cultured butter & house jam</span></div>
+    <div class="item"><span class="item-name">Fresh Seasonal Fruit Bowl</span><span class="item-price">$9</span><span class="item-desc">Market fruit, honey & mint</span></div>
+    <div class="item"><span class="item-name">House-Made Granola & Greek Yogurt</span><span class="item-price">$10</span><span class="item-desc">Berry compote & honey</span></div>
+    <div class="item"><span class="item-name">Smoked Salmon Add-On (2 oz)</span><span class="item-price">$9</span><span class="item-desc">Add to any plate</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════ LUNCH ═══════ -->
+<div class="page" id="p-lunch"><div class="wrap">
+  <div class="sh"><p class="sh-eye">Vantage South</p><h2 class="sh-title">Lunch</h2><p class="sh-sub">Served daily 11:30 AM – 3:00 PM</p></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Starters & Soups</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">Ember-Roasted Tomato Bruschetta <span class="tag v">V</span></span><span class="item-price">$17</span><span class="item-desc">Grilled sourdough crostini with fire-roasted heirloom tomatoes, fresh basil, aged balsamic reduction, and shaved Parmigiano-Reggiano.</span></div>
+  <div class="item"><span class="item-name">Charred Corn & Black Bean Soup <span class="tag v">V</span></span><span class="item-price">$16</span><span class="item-desc">Rich and smoky corn bisque with fire-roasted black beans, charred jalapeño crema, fresh cilantro, and warm house-made cornbread.</span></div>
+  <div class="item"><span class="item-name">French Onion Soup <span class="tag new-tag">New</span></span><span class="item-price">$18</span><span class="item-desc">Slowly caramelized sweet onions in rich beef bone broth with dry sherry and fresh thyme, topped with toasted sourdough crouton and melted golden Gruyère crust. Finished tableside.</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Salads</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">78 Caesar Salad</span><span class="item-price">$18</span><span class="item-desc">Crisp hearts of romaine, house-made ember-anchovy Caesar dressing, shaved Parmigiano-Reggiano, and house-baked sourdough croutons. Add: Grilled chicken $9 · Seared salmon $12 · Grilled shrimp $13</span></div>
+  <div class="item"><span class="item-name">River Beets & Arugula <span class="tag v">V</span></span><span class="item-price">$20</span><span class="item-desc">Roasted golden and red beets, peppery arugula, candied walnuts, crumbled goat cheese, shaved fennel, and sherry-honey vinaigrette. Add: Grilled chicken $9 · Seared salmon $12</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Handhelds</span><div class="sl-line"></div></div>
+  <div class="note">All handhelds served with hand-cut fries. Substitute mixed greens or truffle fries +$4.</div>
+  <div class="item"><span class="item-name">Torta</span><span class="item-price">$22</span><span class="item-desc">Golden bolillo bread with thinly pounded chicken or steak Milanese, refried beans, queso fresco, avocado, pickled red onions, tomato, shredded lettuce, and house lemon aioli.</span></div>
+  <div class="item"><span class="item-name">Steak Sandwich</span><span class="item-price">$28</span><span class="item-desc">Sliced grilled flat iron steak with ember-caramelized onions, peppery arugula, aged provolone, and horseradish aioli on a toasted ciabatta roll.</span></div>
+  <div class="item"><span class="item-name">Chipotle Chicken Sandwich</span><span class="item-price">$24</span><span class="item-desc">Grilled chicken breast with creamy chipotle sauce, pepper jack cheese, garlic aioli, crisp butter lettuce, and vine-ripened tomato on a toasted brioche bun.</span></div>
+  <div class="item"><span class="item-name">Double Ember Smash Burger</span><span class="item-price">$26</span><span class="item-desc">Two smashed 4oz beef patties, double-stacked on a toasted brioche bun with American cheese, ember-charred tomato, house pickles, shredded iceberg, and smoky ember sauce.</span></div>
+  <div class="item"><span class="item-name">The 78 Signature Burger <span class="tag sig">Signature</span></span><span class="item-price">$32</span><span class="item-desc">Hand-formed beef and lamb blend patty smashed to order on a toasted butter-brushed brioche bun, with ember-caramelized onions, melted provolone, crisp lettuce, vine tomato, and house signature sauce. Served with hand-cut fries.</span></div>
+  <div class="item"><span class="item-name">Riverfront Lobster Roll <span class="tag sig">Signature</span></span><span class="item-price">$44</span><span class="item-desc">Chilled Maine lobster salad with light lemon-herb mayo in a toasted butter-brushed brioche roll with house-made kettle chips and a dill pickle spear.</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Flatbreads</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">Truffle Mushroom Flatbread <span class="tag v">V</span><span class="tag sig">Signature</span></span><span class="item-price">$24</span><span class="item-desc">Thin-crisped flatbread with roasted garlic cream base, mixed wild mushrooms, fresh thyme, black truffle oil, shaved Parmigiano-Reggiano, and peppery arugula.</span></div>
+  <div class="item"><span class="item-name">Fig & Prosciutto Flatbread</span><span class="item-price">$26</span><span class="item-desc">Fire-blistered flatbread with honey ricotta base, prosciutto di Parma, fresh mission figs, baby arugula, toasted pine nuts, and balsamic glaze.</span></div>
+  <div class="item"><span class="item-name">BBQ Short Rib Flatbread <span class="tag sig">Signature</span></span><span class="item-price">$28</span><span class="item-desc">Pulled ember-braised short rib with house-made smoky BBQ base, pickled red onion, shaved jalapeño, white cheddar, chipotle crema, and fresh cilantro.</span></div>
+</div></div>
+
+<!-- ═══════ DINNER ═══════ -->
+<div class="page" id="p-dinner"><div class="wrap">
+  <div class="sh"><p class="sh-eye">Vantage South</p><h2 class="sh-title">Dinner</h2><p class="sh-sub">Served daily 5:00 PM – 11:00 PM · Reserve your table for the riverfront terrace</p></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Starters & Small Plates</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">Ember-Roasted Bone Marrow <span class="tag sig">Signature</span></span><span class="item-price">$26</span><span class="item-desc">Two halved roasted beef marrow bones finished over an open flame, served with grilled sourdough toast, pickled shallot jam, fresh parsley, and fleur de sel.</span></div>
+  <div class="item"><span class="item-name">Korean-Style Short Ribs</span><span class="item-price">$26</span><span class="item-desc">Marinated and grilled short ribs glazed with rich bulgogi sauce, finished with toasted sesame seeds, pickled daikon, cucumbers, and fresh scallions.</span></div>
+  <div class="item"><span class="item-name">Street Corn <span class="tag v">V</span><span class="tag gf">GF</span></span><span class="item-price">$16</span><span class="item-desc">Fire-grilled sweet corn tossed in house-made lime aioli, crumbled cotija cheese, ancho chili powder, and fresh cilantro.</span></div>
+  <div class="item"><span class="item-name">Cauliflower Wings <span class="tag v">V</span></span><span class="item-price">$22</span><span class="item-desc">Beer-battered cauliflower florets (or chicken wings on request) tossed in bell pepper buffalo, sweet chili, or garlic soy glaze. Served with house ranch.</span></div>
+  <div class="item"><span class="item-name">Wood-Fired Burrata <span class="tag v">V</span><span class="tag sig">Signature</span></span><span class="item-price">$24</span><span class="item-desc">Fresh burrata, fire-roasted heirloom tomatoes, house-made basil oil, aged balsamic glaze, Sicilian sea salt, and warm grilled bread.</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Soups</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">French Onion Soup <span class="tag new-tag">New</span></span><span class="item-price">$20</span><span class="item-desc">Slowly caramelized sweet onions in rich beef bone broth with dry sherry and thyme, topped with toasted sourdough crouton and melted golden Gruyère crust. Finished tableside.</span></div>
+  <div class="item"><span class="item-name">Pozole Rojo <span class="tag new-tag">New</span><span class="tag gf">GF</span></span><span class="item-price">$22</span><span class="item-desc">Slow-simmered Mexican red chile hominy stew with braised pork shoulder, guajillo and ancho chiles, and rich pork bone broth. Served with tostadas, shredded cabbage, radish, white onion, oregano, and fresh lime.</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">From the Ember</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">40-Day Dry-Aged Ribeye  |  16 oz <span class="tag sig">Signature</span></span><span class="item-price">$88</span><span class="item-desc">Prime 40-day dry-aged bone-in ribeye finished over a live ember flame. Served with ember-roasted bone marrow butter, hand-cut fries, and a choice of house sauce.</span></div>
+  <div class="item"><span class="item-name">Grilled Skirt Steak</span><span class="item-price">$42</span><span class="item-desc">Marinated and grilled skirt steak with house-made chimichurri, ember-roasted fingerling potatoes, and fire-roasted seasonal vegetables.</span></div>
+  <div class="item"><span class="item-name">Fire-Kissed Lamb Chops</span><span class="item-price">$68</span><span class="item-desc">Four double-cut New Zealand lamb chops charred over high heat with rosemary and garlic ember crust, roasted root vegetables, and house-made mint chimichurri.</span></div>
+  <div class="item"><span class="item-name">Crispy Chicken Milanese</span><span class="item-price">$34</span><span class="item-desc">Golden breaded chicken cutlet over Dijon cream sauce base, topped with fresh arugula salad, shaved Parmigiano-Reggiano, and bright lemon vinaigrette.</span></div>
+  <div class="item"><span class="item-name">Braised Short Ribs</span><span class="item-price">$48</span><span class="item-desc">Slow-braised short ribs with silky carrot and beet purée, sautéed beech mushrooms, baby bok choy, and rich plum wine reduction.</span></div>
+  <div class="item"><span class="item-name">Miso-Glazed Black Cod</span><span class="item-price">$52</span><span class="item-desc">Pan-seared black cod glazed with sweet white miso, served over jasmine rice with roasted bok choy and a drizzle of sesame oil.</span></div>
+  <div class="item"><span class="item-name">Fire-Grilled Verlasso Salmon <span class="tag gf">GF</span></span><span class="item-price">$58</span><span class="item-desc">Sustainably sourced Verlasso salmon grilled over an open flame with lemon-caper brown butter, warm farro, fire-roasted asparagus, and fresh dill.</span></div>
+  <div class="item"><span class="item-name">Half-Roasted Chicken</span><span class="item-price">$44</span><span class="item-desc">Ember-roasted half chicken with crispy charred skin, herb jus, roasted garlic mashed potatoes, and fire-roasted seasonal vegetables.</span></div>
+  <div class="sl"><div class="sl-line"></div><span class="sl-text">Pasta</span><div class="sl-line"></div></div>
+  <div class="item"><span class="item-name">Penne alla Vodka <span class="tag v">V</span></span><span class="item-price">$28</span><span class="item-desc">Penne in rich and creamy tomato vodka sauce with Parmigiano-Reggiano, finishing olive oil, and fresh basil. Add house-made Italian sausage $6.</span></div>
+  <div class="item"><span class="item-name">Wild Mushroom Tagliatelle <span class="tag v">V</span></span><span class="item-price">$30</span><span class="item-desc">House-made tagliatelle with roasted chanterelle, maitake, and porcini in white wine, thyme, and Parmigiano cream sauce. Finished with black truffle oil and shaved Pecorino.</span></div>
+  <div class="item"><span class="item-name">Ember Bolognese</span><span class="item-price">$32</span><span class="item-desc">Slow-cooked beef and pork Bolognese with dry red wine, San Marzano tomatoes, and fire-roasted cherry peppers. Tossed with house-made pappardelle and Parmigiano-Reggiano.</span></div>
+  <div class="item"><span class="item-name">Lobster Ravioli</span><span class="item-price">$44</span><span class="item-desc">House-made pasta pillows filled with Maine lobster and mascarpone in saffron cream sauce with sweet corn, charred cherry tomatoes, micro basil, and Calabrian chili oil.</span></div>
+</div></div>
+
+<!-- ═══════ SIDES ═══════ -->
+<div class="page" id="p-sides"><div class="wrap">
+  <div class="sh"><p class="sh-eye">Vantage South</p><h2 class="sh-title">Sides</h2><p class="sh-sub">Available at dinner · Designed to share</p></div>
+  <div class="two-col">
+    <div class="item"><span class="item-name">Ember-Roasted Fingerling Potatoes <span class="tag v">V</span></span><span class="item-price">$13</span><span class="item-desc">Fire-roasted fingerlings with rosemary, garlic confit, sea salt, and house aioli.</span></div>
+    <div class="item"><span class="item-name">Charred Asparagus with Lemon Miso <span class="tag v">V</span></span><span class="item-price">$14</span><span class="item-desc">Open-flamed asparagus with lemon miso butter, toasted almonds, and sea salt.</span></div>
+    <div class="item"><span class="item-name">Crispy Brussels with Maple Chili Glaze <span class="tag v">V</span></span><span class="item-price">$15</span><span class="item-desc">Roasted Brussels sprouts in maple chili glaze with sesame seeds and scallions.</span></div>
+    <div class="item"><span class="item-name">Truffle Parmesan Fries <span class="tag v">V</span></span><span class="item-price">$16</span><span class="item-desc">Hand-cut fries in black truffle butter, Parmigiano-Reggiano, fresh parsley, and sea salt.</span></div>
+    <div class="item"><span class="item-name">Roasted Garlic Mashed Potatoes <span class="tag v">V</span></span><span class="item-price">$13</span><span class="item-desc">Yukon Gold purée with roasted garlic, cultured butter, and crème fraîche.</span></div>
+    <div class="item"><span class="item-name">Fire-Roasted Seasonal Vegetables <span class="tag v">V</span></span><span class="item-price">$13</span><span class="item-desc">Market vegetables charred over an open flame with herb oil and sea salt.</span></div>
+    <div class="item"><span class="item-name">Sautéed Wild Mushrooms <span class="tag v">V</span></span><span class="item-price">$14</span><span class="item-desc">Mixed beech, maitake & shiitake with garlic, thyme, dry sherry, and Parmigiano.</span></div>
+    <div class="item"><span class="item-name">Jasmine Rice <span class="tag v">V</span></span><span class="item-price">$9</span><span class="item-desc">Steamed jasmine rice with toasted sesame oil and scallion.</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════ DESSERTS ═══════ -->
+<div class="page" id="p-desserts"><div class="wrap">
+  <div class="sh"><p class="sh-eye">Vantage South</p><h2 class="sh-title">Desserts</h2><p class="sh-sub">Prepared fresh daily by our pastry team</p></div>
+  <div class="item"><span class="item-name">Warm Malt Chocolate Lava Cake <span class="tag sig">Signature</span></span><span class="item-price">$18</span><span class="item-desc">Rich dark chocolate and malted milk lava cake served warm with a molten center, house-made vanilla bean ice cream, and a dusting of cocoa powder.</span></div>
+  <div class="item"><span class="item-name">Banana Bread Pudding</span><span class="item-price">$16</span><span class="item-desc">Warm house-made banana pudding with rich chocolate caramel sauce and a scoop of vanilla bean ice cream.</span></div>
+  <div class="item"><span class="item-name">Churros <span class="tag v">V</span></span><span class="item-price">$14</span><span class="item-desc">Classic fried churros dusted in cinnamon sugar with warm dark chocolate dipping sauce and a side of caramel cream.</span></div>
+  <div class="item"><span class="item-name">Flan <span class="tag v">V</span></span><span class="item-price">$14</span><span class="item-desc">Classic creamy egg custard baked until silky smooth, topped with rich amber caramel sauce. Timeless and simply done right.</span></div>
+  <div class="item"><span class="item-name">Eton Mess <span class="tag v">V</span></span><span class="item-price">$16</span><span class="item-desc">Fresh seasonal berries, strawberry whipped cream, and crushed house-made meringue layered into a light and refreshing dessert.</span></div>
+  <div class="item"><span class="item-name">Tiramisu <span class="tag v">V</span></span><span class="item-price">$16</span><span class="item-desc">Classic Italian dessert with espresso-soaked ladyfinger layers, whipped mascarpone cream, and a generous dusting of dark cocoa powder.</span></div>
+  <div class="item"><span class="item-name">Tres Leches Cake <span class="tag v">V</span></span><span class="item-price">$15</span><span class="item-desc">Airy vanilla sponge soaked in three milks, topped with lightly sweetened whipped cream and a dusting of cinnamon. Served chilled.</span></div>
+  <div class="item"><span class="item-name">Artisan Ice Cream & Sorbet <span class="tag v">V</span></span><span class="item-price">$12</span><span class="item-desc">Three scoops of house-made or locally sourced ice cream and sorbet. Ask your server for today's selections.</span></div>
+</div></div>
+
+<footer class="menu-footer">
+  <p class="footer-logo">Vantage South</p>
+  <p class="footer-note">
+    Nexus at The 78 · Chicago, Illinois · Riverfront Restaurant & Terrace<br>
+    Breakfast 6:30 AM – 11 AM · Lunch 11:30 AM – 3 PM · Dinner 5 PM – 11 PM<br><br>
+    <span class="tag v">V</span> Vegetarian &nbsp; <span class="tag gf">GF</span> Gluten-Friendly &nbsp; <span class="tag sig">Signature</span> House Specialty<br><br>
+    Consuming raw or undercooked proteins may increase your risk of foodborne illness.<br>
+    Please inform your server of any dietary restrictions or allergies.<br>
+    Menu items and pricing subject to seasonal availability.
+  </p>
+</footer>
+
+<script>
+function go(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-' + id).classList.add('on');
+  btn.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav-outer').offsetTop, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
